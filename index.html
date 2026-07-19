@@ -19,38 +19,14 @@
     }
 
     main {
-      width: min(1120px, calc(100% - 32px));
+      width: min(1120px, 100%);
       margin: 0 auto;
-      padding: 36px 0;
+      padding: 16px;
     }
 
-    header {
-      display: grid;
-      gap: 8px;
-      margin-bottom: 24px;
-    }
-
-    header > * + * {
-      margin-top: 8px;
-    }
-
-    h1,
     h2,
     p {
       margin: 0;
-    }
-
-    h1 {
-      font-size: clamp(2rem, 5vw, 4.5rem);
-      line-height: 0.95;
-      letter-spacing: 0;
-    }
-
-    header p {
-      max-width: 720px;
-      color: #657186;
-      font-size: 1rem;
-      line-height: 1.55;
     }
 
     .app {
@@ -187,6 +163,31 @@
       max-height: 430px;
       overflow: auto;
       padding-right: 3px;
+    }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .pagination button {
+      min-height: 34px;
+      padding: 0 12px;
+      background: #18202f;
+      color: #fff;
+    }
+
+    .pagination button[disabled] {
+      cursor: default;
+      opacity: 0.38;
+    }
+
+    .pagination-status {
+      color: #657186;
+      font-size: 0.82rem;
+      font-weight: 800;
     }
 
     .pokemon-result {
@@ -457,11 +458,6 @@
 </head>
 <body>
   <main>
-    <header>
-      <h1>Pokemon Type Lookup</h1>
-      <p>Pick an attack move type to see what it hits, or pick a Pokemon type to find which move types work best against it.</p>
-    </header>
-
     <section class="app" aria-label="Pokemon type matchup lookup">
       <aside class="type-picker" aria-label="Type lookup controls">
         <div class="tabs" role="tablist" aria-label="Lookup mode">
@@ -483,6 +479,11 @@
         <div class="tab-panel" id="searchPanel" role="tabpanel" aria-labelledby="searchTab" hidden>
           <input class="search-box" id="pokemonSearch" type="search" autocomplete="off" placeholder="Search Pokemon">
           <div class="pokemon-list" id="pokemonResults"></div>
+          <div class="pagination" id="pokemonPagination">
+            <button type="button" id="prevPokemonPage">Prev</button>
+            <span class="pagination-status" id="pokemonPageStatus"></span>
+            <button type="button" id="nextPokemonPage">Next</button>
+          </div>
         </div>
 
         <div class="tab-panel" id="attackPanel" role="tabpanel" aria-labelledby="attackTab" hidden>
@@ -502,7 +503,6 @@
       </section>
     </section>
 
-    <footer>Type chart data follows Bulbapedia's Generation VI onward table. Pokemon list sourced from PokemonDB.</footer>
   </main>
 
   <script>
@@ -6731,6 +6731,10 @@ var attackButtons = document.querySelector("#attackButtons");
 var pokemonButtons = document.querySelector("#pokemonButtons");
 var pokemonSearch = document.querySelector("#pokemonSearch");
 var pokemonResults = document.querySelector("#pokemonResults");
+var pokemonPagination = document.querySelector("#pokemonPagination");
+var prevPokemonPage = document.querySelector("#prevPokemonPage");
+var nextPokemonPage = document.querySelector("#nextPokemonPage");
+var pokemonPageStatus = document.querySelector("#pokemonPageStatus");
 var matchups = document.querySelector("#matchups");
 var resultTitle = document.querySelector("#resultTitle");
 var selectedBadge = document.querySelector("#selectedBadge");
@@ -6740,6 +6744,8 @@ var selections = {
   pokemon: "",
   search: null
 };
+var searchPage = 1;
+var searchPageSize = 20;
 var activeMode = "pokemon";
 function effectClass(value) {
   if (value > 1) return "chip-super";
@@ -6934,9 +6940,18 @@ function renderPokemonResults() {
   }).filter(function (entry) {
     return !normalized || entry.name.toLowerCase().includes(normalized);
   });
-  pokemonResults.innerHTML = matches.map(function (entry) {
+  var totalPages = Math.max(1, Math.ceil(matches.length / searchPageSize));
+  if (searchPage > totalPages) searchPage = totalPages;
+  if (searchPage < 1) searchPage = 1;
+  var pageStart = (searchPage - 1) * searchPageSize;
+  var pageMatches = matches.slice(pageStart, pageStart + searchPageSize);
+  pokemonResults.innerHTML = pageMatches.map(function (entry) {
     return "\n        <button class=\"pokemon-result\" type=\"button\" data-index=\"".concat(entry.index, "\" aria-pressed=\"false\">\n          <span class=\"pokemon-name\">#").concat(String(entry.n).padStart(4, "0"), " ").concat(entry.name, "</span>\n          <span class=\"pokemon-types\">").concat(entry.types.map(miniTypeChip).join(""), "</span>\n        </button>\n      ");
   }).join("");
+  pokemonPagination.hidden = matches.length <= searchPageSize;
+  prevPokemonPage.disabled = searchPage <= 1;
+  nextPokemonPage.disabled = searchPage >= totalPages;
+  pokemonPageStatus.textContent = matches.length ? "Page " + searchPage + " of " + totalPages : "No results";
 }
 attackButtons.innerHTML = buttonMarkup("attack");
 pokemonButtons.innerHTML = buttonMarkup("pokemon");
@@ -6961,7 +6976,16 @@ document.querySelector(".type-picker").addEventListener("click", function (event
   if (button) renderGroups(button.dataset.mode, button.dataset.type);
 });
 pokemonSearch.addEventListener("input", function (event) {
+  searchPage = 1;
   renderPokemonResults(event.target.value);
+});
+prevPokemonPage.addEventListener("click", function () {
+  searchPage -= 1;
+  renderPokemonResults(pokemonSearch.value);
+});
+nextPokemonPage.addEventListener("click", function () {
+  searchPage += 1;
+  renderPokemonResults(pokemonSearch.value);
 });
 pokemonImage.addEventListener("error", function () {
   if (pokemonImage.src.indexOf("/avif/") !== -1) {
