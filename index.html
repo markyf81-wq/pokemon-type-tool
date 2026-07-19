@@ -5,17 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pokemon Type Lookup</title>
   <style>
-    :root {
-      color-scheme: light;
-      --bg: #f6f8fb;
-      --panel: #ffffff;
-      --ink: #18202f;
-      --muted: #657186;
-      --line: #dbe2ed;
-      --focus: #2563eb;
-      --shadow: 0 18px 50px rgba(30, 41, 59, 0.12);
-    }
-
     * {
       box-sizing: border-box;
     }
@@ -24,11 +13,9 @@
       margin: 0;
       min-height: 100vh;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at top left, rgba(239, 68, 68, 0.16), transparent 32rem),
-        radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.14), transparent 34rem),
-        var(--bg);
+      color: #18202f;
+      background: #f6f8fb;
+      background: radial-gradient(circle at top left, rgba(239, 68, 68, 0.16), transparent 32rem), radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.14), transparent 34rem), #f6f8fb;
     }
 
     main {
@@ -41,6 +28,10 @@
       display: grid;
       gap: 8px;
       margin-bottom: 24px;
+    }
+
+    header > * + * {
+      margin-top: 8px;
     }
 
     h1,
@@ -57,24 +48,36 @@
 
     header p {
       max-width: 720px;
-      color: var(--muted);
+      color: #657186;
       font-size: 1rem;
       line-height: 1.55;
     }
 
     .app {
+      display: block;
       display: grid;
       grid-template-columns: minmax(260px, 360px) 1fr;
       gap: 18px;
       align-items: start;
     }
 
+    .app > * + * {
+      margin-top: 18px;
+    }
+
+    @supports (display: grid) {
+      .app > * + * {
+        margin-top: 0;
+      }
+    }
+
     .type-picker,
     .results {
       background: rgba(255, 255, 255, 0.88);
-      border: 1px solid var(--line);
+      border: 1px solid #dbe2ed;
       border-radius: 8px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 18px 50px rgba(30, 41, 59, 0.12);
+      -webkit-backdrop-filter: blur(10px);
       backdrop-filter: blur(10px);
     }
 
@@ -98,9 +101,13 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 6px;
       padding: 4px;
-      border: 1px solid var(--line);
+      border: 1px solid #dbe2ed;
       border-radius: 8px;
       background: #eef2f7;
+    }
+
+    .tabs .tab {
+      margin: 3px;
     }
 
     .tab {
@@ -108,20 +115,20 @@
       min-height: 40px;
       border-color: transparent;
       background: transparent;
-      color: var(--muted);
+      color: #657186;
       font-weight: 800;
     }
 
     .tab:hover {
       transform: none;
       box-shadow: none;
-      color: var(--ink);
+      color: #18202f;
     }
 
     .tab.active {
-      border-color: var(--line);
+      border-color: #dbe2ed;
       background: #fff;
-      color: var(--ink);
+      color: #18202f;
       box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
     }
 
@@ -134,15 +141,15 @@
       min-height: 42px;
       margin-bottom: 10px;
       padding: 0 12px;
-      border: 1px solid var(--line);
+      border: 1px solid #dbe2ed;
       border-radius: 8px;
       background: #fff;
-      color: var(--ink);
+      color: #18202f;
       font: 700 0.92rem/1 system-ui, sans-serif;
     }
 
     .search-box:focus {
-      border-color: var(--focus);
+      border-color: #2563eb;
       outline: 3px solid rgba(37, 99, 235, 0.2);
     }
 
@@ -155,18 +162,31 @@
     }
 
     .pokemon-result {
+      margin-bottom: 7px;
+    }
+
+    .pokemon-result {
+      display: flex;
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 8px;
       align-items: center;
       min-height: 46px;
       padding: 8px 10px;
-      border: 1px solid var(--line);
+      border: 1px solid #dbe2ed;
       border-radius: 8px;
       background: #fff;
-      color: var(--ink);
+      color: #18202f;
       text-align: left;
       box-shadow: none;
+    }
+
+    .pokemon-result .pokemon-name {
+      flex: 1 1 auto;
+    }
+
+    .pokemon-result .pokemon-types {
+      flex: 0 0 auto;
     }
 
     .pokemon-result:hover {
@@ -192,6 +212,10 @@
       gap: 5px;
     }
 
+    .pokemon-types .mini-chip {
+      margin: 2px;
+    }
+
     .mini-chip {
       min-height: 22px;
       padding: 0 8px;
@@ -208,6 +232,7 @@
 
     .type-grid button {
       flex: 1 1 44%;
+      margin: 4px;
     }
 
     button {
@@ -247,7 +272,7 @@
       justify-content: space-between;
       gap: 12px;
       padding-bottom: 16px;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid #dbe2ed;
     }
 
     .result-summary {
@@ -255,6 +280,10 @@
       align-items: center;
       gap: 12px;
       min-width: 0;
+    }
+
+    .result-summary > * + * {
+      margin-left: 12px;
     }
 
     .pokemon-image {
@@ -295,9 +324,10 @@
 
     .group {
       flex: 1 1 280px;
+      margin: 7px;
       min-height: 162px;
       padding: 14px;
-      border: 1px solid var(--line);
+      border: 1px solid #dbe2ed;
       border-radius: 8px;
       background: #fff;
     }
@@ -326,6 +356,7 @@
       font-size: 0.8rem;
       font-weight: 800;
       text-shadow: 0 1px 1px rgba(0, 0, 0, 0.24);
+      margin: 3px;
     }
 
     .chip-label {
@@ -335,9 +366,7 @@
 
     .chip-super {
       border-color: #fff !important;
-      outline: 2px solid var(--chip-color);
-      outline-offset: 1px;
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.18);
+      border-color: #fff !important;
     }
 
     .chip-weak {
@@ -357,13 +386,13 @@
     }
 
     .empty {
-      color: var(--muted);
+      color: #657186;
       font-size: 0.88rem;
     }
 
     footer {
       margin-top: 18px;
-      color: var(--muted);
+      color: #657186;
       font-size: 0.82rem;
     }
 
@@ -6679,7 +6708,18 @@ function effectClass(value) {
 function typeChip(type) {
   var suffix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
   var value = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-  return "<span class=\"chip ".concat(effectClass(value), "\" style=\"--chip-color:").concat(colors[type], "; background-color:").concat(colors[type], "; border-color:").concat(colors[type], "\"><span class=\"chip-label\">").concat(type).concat(suffix, "</span></span>");
+  var color = colors[type];
+  var borderColor = color;
+  var shadow = "";
+  if (value > 1) {
+    borderColor = "#fff";
+    shadow = " box-shadow:0 0 0 2px " + color + ", 0 4px 10px rgba(15, 23, 42, 0.18);";
+  } else if (value > 0 && value < 1) {
+    borderColor = "#fff";
+  } else if (value === 0 || value === 1) {
+    borderColor = "transparent";
+  }
+  return "<span class=\"chip ".concat(effectClass(value), "\" style=\"background-color:").concat(color, "; border-color:").concat(borderColor, ";").concat(shadow, "\"><span class=\"chip-label\">").concat(type).concat(suffix, "</span></span>");
 }
 function multiplierLabel(value) {
   var showAll = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
