@@ -53,13 +53,16 @@
     .type-picker {
       float: left;
       width: 32%;
+      height: 640px;
+      overflow: hidden;
       padding: 16px;
     }
 
     .results {
       float: right;
       width: 66%;
-      min-height: 480px;
+      height: 640px;
+      overflow: hidden;
       padding: 18px;
     }
 
@@ -140,9 +143,8 @@
     }
 
     .pokemon-result {
-      display: table;
+      display: block;
       width: 100%;
-      table-layout: auto;
       min-height: 58px;
       margin-bottom: 9px;
       padding: 12px 10px;
@@ -150,10 +152,17 @@
       border-radius: 8px;
       background: #fff;
       color: #18202f;
+      box-shadow: 0 5px 12px rgba(30, 41, 59, 0.08);
       text-align: left;
       font: 800 1rem/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       white-space: normal;
       cursor: pointer;
+    }
+
+    .pokemon-result:after {
+      content: "";
+      display: table;
+      clear: both;
     }
 
     .pokemon-result.active {
@@ -163,23 +172,36 @@
 
     .pokemon-name,
     .pokemon-types {
-      display: table-cell;
-      height: 34px;
-      vertical-align: middle;
+      min-height: 34px;
     }
 
     .pokemon-name {
+      display: block;
+      margin-right: 142px;
       padding-right: 10px;
+      padding-top: 7px;
       line-height: 1.2;
     }
 
     .pokemon-types {
+      display: block;
+      float: right;
+      width: 132px;
       text-align: right;
       line-height: 1;
-      white-space: nowrap;
+      white-space: normal;
+    }
+
+    .pokemon-types-inner {
+      display: block;
+      text-align: right;
+      white-space: normal;
     }
 
     .pagination {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
       margin-top: 10px;
     }
 
@@ -207,12 +229,15 @@
     }
 
     .pagination-status {
-      display: block;
-      padding-top: 10px;
+      display: table-cell;
+      width: auto;
+      padding: 0 6px;
       color: #657186;
       font-size: 0.82rem;
       font-weight: 800;
+      line-height: 34px;
       text-align: center;
+      vertical-align: middle;
     }
 
     .result-header {
@@ -260,6 +285,12 @@
       margin-top: 16px;
     }
 
+    .results-body {
+      max-height: 430px;
+      overflow: auto;
+      padding-right: 3px;
+    }
+
     .group {
       float: left;
       width: 47%;
@@ -269,6 +300,7 @@
       border: 1px solid #dbe2ed;
       border-radius: 8px;
       background: #fff;
+      box-shadow: 0 6px 14px rgba(30, 41, 59, 0.1);
     }
 
     .group h3 {
@@ -462,9 +494,11 @@
           <img class="pokemon-image" id="pokemonImage" alt="" hidden>
           <span class="selected-chips" id="selectedBadge"><span class="chip chip-normal" style="background-color:#8f99a5; border-color:transparent"><span class="chip-label">None</span></span></span>
         </div>
-        <div class="matchups" id="matchups"></div>
-        <div class="move-detail" id="moveDetail" hidden></div>
-        <div class="pokemon-detail" id="pokemonDetail" hidden></div>
+        <div class="results-body">
+          <div class="matchups" id="matchups"></div>
+          <div class="move-detail" id="moveDetail" hidden></div>
+          <div class="pokemon-detail" id="pokemonDetail" hidden></div>
+        </div>
       </section>
     </section>
 
@@ -21777,7 +21811,7 @@ function renderPokemonResults() {
   var pageStart = (searchPage - 1) * searchPageSize;
   var pageMatches = matches.slice(pageStart, pageStart + searchPageSize);
   pokemonResults.innerHTML = pageMatches.map(function (entry) {
-    return "\n        <button class=\"pokemon-result\" type=\"button\" data-index=\"".concat(entry.index, "\" aria-pressed=\"false\">\n          <span class=\"pokemon-name\">#").concat(String(entry.n).padStart(4, "0"), " ").concat(entry.name, "</span>\n          <span class=\"pokemon-types\">").concat(entry.types.map(miniTypeChip).join(""), "</span>\n        </button>\n      ");
+    return "\n        <button class=\"pokemon-result\" type=\"button\" data-index=\"".concat(entry.index, "\" aria-pressed=\"false\">\n          <span class=\"pokemon-types\"><span class=\"pokemon-types-inner\">").concat(entry.types.map(miniTypeChip).join(""), "</span></span>\n          <span class=\"pokemon-name\">").concat(entry.name, "</span>\n        </button>\n      ");
   }).join("");
   pokemonPagination.hidden = matches.length <= searchPageSize;
   prevPokemonPage.disabled = searchPage <= 1;
