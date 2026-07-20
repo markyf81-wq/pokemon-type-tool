@@ -136,13 +136,25 @@
       outline: 4px solid #facc15;
     }
 
+    .search-type-filter {
+      width: 100%;
+      height: 40px;
+      margin-bottom: 10px;
+      padding: 0 10px;
+      border: 2px solid #dbe2ed;
+      border-radius: 8px;
+      background: #fff;
+      color: #18202f;
+      font: 800 0.9rem/40px -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
     #searchPanel,
     #teamPanel {
       height: 532px;
     }
 
     .pokemon-list {
-      max-height: 430px;
+      max-height: 380px;
       overflow: auto;
       padding-right: 3px;
     }
@@ -763,6 +775,7 @@
 
         <div class="tab-panel" id="searchPanel" role="tabpanel" aria-labelledby="searchTab">
           <input class="search-box" id="pokemonSearch" type="search" autocomplete="off" placeholder="Search Pokemon">
+          <select class="search-type-filter" id="pokemonTypeFilter" aria-label="Filter by type"></select>
           <div class="pokemon-list" id="pokemonResults"></div>
           <div class="pagination" id="pokemonPagination">
             <button type="button" id="prevPokemonPage">Prev</button>
@@ -956,6 +969,7 @@ var labelSets = {
 var attackButtons = document.querySelector("#attackButtons");
 var pokemonButtons = document.querySelector("#pokemonButtons");
 var pokemonSearch = document.querySelector("#pokemonSearch");
+var pokemonTypeFilter = document.querySelector("#pokemonTypeFilter");
 var pokemonResults = document.querySelector("#pokemonResults");
 var pokemonPagination = document.querySelector("#pokemonPagination");
 var prevPokemonPage = document.querySelector("#prevPokemonPage");
@@ -1628,6 +1642,7 @@ function renderPokemon(pokemonEntry) {
 function renderPokemonResults() {
   var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
   var normalized = query.trim().toLowerCase();
+  var selectedType = pokemonTypeFilter.value;
   var matches = pokemon.map(function (entry, index) {
     return {
       n: entry.n,
@@ -1637,7 +1652,9 @@ function renderPokemonResults() {
       index: index
     };
   }).filter(function (entry) {
-    return !normalized || entry.name.toLowerCase().indexOf(normalized) === 0;
+    var nameMatches = !normalized || entry.name.toLowerCase().indexOf(normalized) === 0;
+    var typeMatches = !selectedType || entry.types.indexOf(selectedType) !== -1;
+    return nameMatches && typeMatches;
   });
   var totalPages = Math.max(1, Math.ceil(matches.length / searchPageSize));
   if (searchPage > totalPages) searchPage = totalPages;
@@ -1654,6 +1671,9 @@ function renderPokemonResults() {
 }
 attackButtons.innerHTML = buttonMarkup("attack");
 pokemonButtons.innerHTML = buttonMarkup("pokemon");
+pokemonTypeFilter.innerHTML = '<option value="">All types</option>' + types.slice().sort().map(function (type) {
+  return "<option value=\"".concat(type, "\">").concat(type, "</option>");
+}).join("");
 renderPokemonResults();
 loadTeam();
 renderTeam();
@@ -1798,6 +1818,10 @@ pokemonSearch.addEventListener("focus", function () {
   pokemonSearch.value = "";
   searchPage = 1;
   renderPokemonResults("");
+});
+pokemonTypeFilter.addEventListener("change", function () {
+  searchPage = 1;
+  renderPokemonResults(pokemonSearch.value);
 });
 prevPokemonPage.addEventListener("click", function () {
   searchPage -= 1;
