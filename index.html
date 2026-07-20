@@ -1212,8 +1212,6 @@ function availableTeamMoves(member) {
     autoMoves = entry.moves.filter(function (move) {
       return moveLevel(move) && moveLevel(move) <= level;
     });
-  } else {
-    autoMoves = entry.moves.slice();
   }
   var hasAutoSlots = selectedNames.length < 4 || selectedNames.filter(function (name) {
     return !name;
@@ -1270,11 +1268,12 @@ function bestAttackAgainst(member, defender) {
     }
   });
   if (!attackOptions.length) {
+    var fallbackPower = Number(member.level) ? 40 : 0;
     attacker.types.forEach(function (type) {
       attackOptions.push({
         type: type,
         move: "",
-        power: 40
+        power: fallbackPower
       });
     });
   }
