@@ -52,7 +52,7 @@
 
     .type-picker {
       float: left;
-      width: 32%;
+      width: 36%;
       height: 640px;
       overflow: hidden;
       padding: 16px;
@@ -60,7 +60,7 @@
 
     .results {
       float: right;
-      width: 66%;
+      width: 62%;
       height: 640px;
       overflow: hidden;
       padding: 18px;
@@ -136,7 +136,8 @@
       outline: 4px solid #facc15;
     }
 
-    #searchPanel {
+    #searchPanel,
+    #teamPanel {
       height: 532px;
     }
 
@@ -203,13 +204,14 @@
     }
 
     .pagination {
-      display: table;
+      display: block;
       width: 100%;
-      table-layout: fixed;
+      height: 36px;
       margin-top: 10px;
     }
 
     .pagination button {
+      width: 62px;
       min-height: 34px;
       padding: 0 12px;
       border: 1px solid transparent;
@@ -233,15 +235,17 @@
     }
 
     .pagination-status {
-      display: table-cell;
+      display: block;
       width: auto;
-      padding: 0 6px;
+      margin: 0 68px;
+      padding: 0;
       color: #657186;
       font-size: 0.82rem;
       font-weight: 800;
       line-height: 34px;
       text-align: center;
       vertical-align: middle;
+      white-space: nowrap;
     }
 
     .team-box,
@@ -252,6 +256,11 @@
       border-radius: 8px;
       background: #fff;
       box-shadow: 0 5px 12px rgba(30, 41, 59, 0.08);
+    }
+
+    #teamPanel .team-box {
+      height: 100%;
+      margin-top: 0;
     }
 
     .team-box h3,
@@ -267,7 +276,7 @@
     }
 
     .team-list {
-      max-height: 226px;
+      max-height: 478px;
       min-height: 32px;
       overflow: auto;
       padding-right: 3px;
@@ -290,9 +299,9 @@
     .team-select {
       display: block;
       width: 100%;
-      min-height: 42px;
+      min-height: 48px;
       margin: 6px 0;
-      padding: 0 10px;
+      padding: 5px 10px;
       border: 1px solid #dbe2ed;
       border-radius: 8px;
       background: #fff;
@@ -302,9 +311,33 @@
       cursor: pointer;
     }
 
+    .team-select:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
     .team-select.active {
       border-color: #111827;
       box-shadow: inset 0 0 0 2px rgba(37, 99, 235, 0.16);
+    }
+
+    .team-select-image {
+      float: left;
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+      border: 1px solid #dbe2ed;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(30, 41, 59, 0.12);
+    }
+
+    .team-select-text {
+      display: block;
+      padding-top: 10px;
+      overflow: hidden;
+      line-height: 1.15;
     }
 
     .team-member-name {
@@ -312,10 +345,22 @@
       margin-bottom: 6px;
     }
 
+    .team-nickname {
+      display: block;
+      width: 100%;
+      height: 32px;
+      margin: 4px 0 8px;
+      padding: 0 8px;
+      border: 1px solid #dbe2ed;
+      border-radius: 6px;
+      background: #fff;
+      color: #18202f;
+      font: 800 0.82rem/32px -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
     .team-level {
       width: 54px;
       height: 30px;
-      margin-left: 6px;
       padding: 0 4px;
       border: 1px solid #dbe2ed;
       border-radius: 6px;
@@ -327,12 +372,36 @@
       width: 58px;
       height: 34px;
       margin-top: 8px;
-      margin-right: 6px;
       padding: 0 5px;
       border: 1px solid #dbe2ed;
       border-radius: 8px;
       color: #18202f;
       font: 800 0.82rem/34px -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      vertical-align: top;
+    }
+
+    .level-step {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      min-height: 30px;
+      margin: 0 3px;
+      padding: 0;
+      border: 1px solid #dbe2ed;
+      border-radius: 6px;
+      background: #eef2f7;
+      color: #18202f;
+      font: 900 1rem/28px -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .selected-actions .level-step {
+      height: 34px;
+      min-height: 34px;
+      margin-top: 8px;
+      line-height: 32px;
+      vertical-align: top;
     }
 
     .level-label {
@@ -342,6 +411,8 @@
       color: #657186;
       font-size: 0.82rem;
       font-weight: 800;
+      line-height: 34px;
+      vertical-align: top;
     }
 
     .team-move {
@@ -370,9 +441,10 @@
     }
 
     .add-team-button {
-      display: inline-block;
+      display: block;
       min-height: 34px;
       margin-top: 10px;
+      margin-left: 0;
       padding: 0 12px;
       border: 1px solid transparent;
       border-radius: 8px;
@@ -661,10 +733,10 @@
             My team
           </button>
           <button class="tab" type="button" id="pokemonTab" role="tab" aria-selected="false" aria-controls="pokemonPanel" data-tab="pokemon">
-            Pokemon type
+            Pokemon types
           </button>
           <button class="tab" type="button" id="attackTab" role="tab" aria-selected="false" aria-controls="attackPanel" data-tab="attack">
-            Move type
+            Move types
           </button>
         </div>
 
@@ -983,10 +1055,17 @@ function pokemonByName(name) {
 function teamEntry(member) {
   return pokemonByName(member.name);
 }
+function escapeHtml(value) {
+  return String(value || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function teamDisplayName(member) {
+  return member.nickname || member.name;
+}
 function saveTeam() {
   var names = JSON.stringify(team.map(function (member) {
     return {
       name: member.name,
+      nickname: member.nickname || "",
       level: member.level || "",
       moves: member.moves || [],
       fainted: !!member.fainted
@@ -1033,6 +1112,7 @@ function loadTeam() {
   }).map(function (member) {
     return {
       name: member.name,
+      nickname: member.nickname || "",
       level: member.level || "",
       moves: member.moves || [],
       fainted: !!member.fainted
@@ -1043,7 +1123,7 @@ function addTeamButtonMarkup(pokemonEntry) {
   var isOnTeam = teamContains(pokemonEntry);
   var isFull = team.length >= 6;
   var text = isOnTeam ? "Already on team" : isFull ? "Team is full" : "Add to team";
-  var html = "<span class=\"level-label\">Enemy Lv</span><input class=\"opponent-level\" type=\"number\" min=\"1\" max=\"100\" placeholder=\"Lv\" value=\"".concat(opponentLevels[pokemonEntry.name] || "", "\" data-opponent-name=\"").concat(pokemonEntry.name, "\"><button class=\"add-team-button\" type=\"button\" id=\"addTeamButton\" data-team-index=\"").concat(pokemon.indexOf(pokemonEntry), "\"");
+  var html = "<span class=\"level-label\">Enemy Level</span><button class=\"level-step opponent-level-step\" type=\"button\" data-step=\"-1\" data-opponent-name=\"".concat(pokemonEntry.name, "\">-</button><input class=\"opponent-level\" type=\"number\" min=\"1\" max=\"100\" placeholder=\"Lv\" value=\"").concat(opponentLevels[pokemonEntry.name] || "", "\" data-opponent-name=\"").concat(pokemonEntry.name, "\"><button class=\"level-step opponent-level-step\" type=\"button\" data-step=\"1\" data-opponent-name=\"").concat(pokemonEntry.name, "\">+</button><button class=\"add-team-button\" type=\"button\" id=\"addTeamButton\" data-team-index=\"").concat(pokemon.indexOf(pokemonEntry), "\"");
   if (isOnTeam || isFull) html += " disabled";
   return html + ">".concat(text, "</button>");
 }
@@ -1052,7 +1132,9 @@ function renderTeam() {
     teamList.innerHTML = '<span class="empty">Add up to 6 Pokemon</span>';
   } else {
     teamList.innerHTML = team.map(function (member, memberIndex) {
-      return "<button class=\"team-select".concat(memberIndex === teamSelection ? " active" : "", "\" type=\"button\" data-team-index=\"").concat(memberIndex, "\">").concat(member.name, member.level ? " Lv " + member.level : "", member.fainted ? " - Fainted" : "", "</button>");
+      var entry = teamEntry(member);
+      var species = member.nickname ? " (" + member.name + ")" : "";
+      return "<button class=\"team-select".concat(memberIndex === teamSelection ? " active" : "", "\" type=\"button\" data-team-index=\"").concat(memberIndex, "\"><img class=\"team-select-image\" src=\"").concat(entry.img, "\" alt=\"\"><span class=\"team-select-text\">").concat(escapeHtml(teamDisplayName(member)), species, member.level ? " Lv " + member.level : "", member.fainted ? " - Fainted" : "", "</span></button>");
     }).join("");
   }
   if (selections.search) renderRecommendation(selections.search);
@@ -1078,7 +1160,7 @@ function renderTeamEditor() {
   if (teamSelection >= team.length) teamSelection = team.length - 1;
   var member = team[teamSelection];
   var entry = teamEntry(member);
-  resultTitle.textContent = entry.name;
+  resultTitle.textContent = teamDisplayName(member);
   selectedBadge.innerHTML = entry.types.map(plainTypeChip).join("");
   selectedActions.innerHTML = "<button class=\"team-remove\" type=\"button\" data-team-index=\"".concat(teamSelection, "\" aria-label=\"Remove ").concat(member.name, "\">Remove from team</button>");
   pokemonImage.src = entry.img;
@@ -1092,7 +1174,7 @@ function renderTeamEditor() {
   var selects = [0, 1, 2, 3].map(function (slot) {
     return "<select class=\"team-move\" data-team-index=\"".concat(teamSelection, "\" data-move-slot=\"").concat(slot, "\">").concat(moveOptions.replace("value=\"" + (member.moves[slot] || "") + "\"", "value=\"" + (member.moves[slot] || "") + "\" selected"), "</select>");
   }).join("");
-  pokemonDetail.innerHTML = "<h3>Edit team Pokemon</h3><p>Level <input class=\"team-level\" type=\"number\" min=\"1\" max=\"100\" value=\"".concat(member.level || "", "\" placeholder=\"Lv\" data-team-index=\"").concat(teamSelection, "\"> <label><input class=\"team-fainted\" type=\"checkbox\" data-team-index=\"").concat(teamSelection, "\"").concat(member.fainted ? " checked" : "", "> Fainted</label></p><h3>Known moves</h3>").concat(selects);
+  pokemonDetail.innerHTML = "<h3>Edit team Pokemon</h3><p>Nickname <input class=\"team-nickname\" type=\"text\" maxlength=\"20\" value=\"".concat(escapeHtml(member.nickname || ""), "\" placeholder=\"").concat(entry.name, "\" data-team-index=\"").concat(teamSelection, "\"></p><p>Level <button class=\"level-step team-level-step\" type=\"button\" data-step=\"-1\" data-team-index=\"").concat(teamSelection, "\">-</button><input class=\"team-level\" type=\"number\" min=\"1\" max=\"100\" value=\"").concat(member.level || "", "\" placeholder=\"Lv\" data-team-index=\"").concat(teamSelection, "\"><button class=\"level-step team-level-step\" type=\"button\" data-step=\"1\" data-team-index=\"").concat(teamSelection, "\">+</button> <label><input class=\"team-fainted\" type=\"checkbox\" data-team-index=\"").concat(teamSelection, "\"").concat(member.fainted ? " checked" : "", "> Fainted</label></p><h3>Known moves</h3>").concat(selects);
   pokemonDetail.hidden = false;
 }
 function availableTeamMoves(member) {
@@ -1270,6 +1352,7 @@ function scoreTeamMember(member, enemy) {
 }
 function recommendationItem(item, index, enemy, mode) {
   var label = mode === "worst" ? index === 0 ? "Worst" : "Also risky" : index === 0 ? "Best" : "Next";
+  var displayName = teamDisplayName(item.member);
   var enemyLevelKnown = !!Number(opponentLevels[enemy.name]);
   var teamLevelKnown = !!Number(item.member.level);
   var dangerMove = enemyLevelKnown && item.danger.move ? item.danger.move + " " : "";
@@ -1293,7 +1376,7 @@ function recommendationItem(item, index, enemy, mode) {
   var attackTypeText = showAttackMove ? "" : " type moves";
   var powerText = showAttackMove && displayPower ? " (" + displayPower + " power" + (item.attack.stab > 1 ? " + STAB" : "") + ")" : "";
   var attackLine = mode === "worst" ? "" : "<br>" + attackLabel + moveName + inlineTypeChip(item.attack.type, item.attack.value) + attackTypeText + powerText;
-  return "<div class=\"recommend-item\"><img class=\"recommend-image\" src=\"".concat(item.entry.img, "\" alt=\"").concat(item.entry.name, "\"><span class=\"recommend-copy\"><span class=\"recommend-name\">").concat(label, ": ").concat(item.entry.name, "</span>").concat(attackLine).concat(dangerLine, "</span></div>");
+  return "<div class=\"recommend-item\"><img class=\"recommend-image\" src=\"".concat(item.entry.img, "\" alt=\"").concat(item.entry.name, "\"><span class=\"recommend-copy\"><span class=\"recommend-name\">").concat(label, ": ").concat(escapeHtml(displayName), "</span>").concat(attackLine).concat(dangerLine, "</span></div>");
 }
 function renderRecommendation(enemy) {
   if (!team.length) {
@@ -1538,7 +1621,7 @@ function renderPokemonResults() {
       index: index
     };
   }).filter(function (entry) {
-    return !normalized || entry.name.toLowerCase().includes(normalized);
+    return !normalized || entry.name.toLowerCase().indexOf(normalized) === 0;
   });
   var totalPages = Math.max(1, Math.ceil(matches.length / searchPageSize));
   if (searchPage > totalPages) searchPage = totalPages;
@@ -1598,12 +1681,34 @@ document.querySelector(".results").addEventListener("click", function (event) {
     renderTeamEditor();
     return;
   }
+  var opponentStep = event.target.closest(".opponent-level-step[data-opponent-name]");
+  if (opponentStep) {
+    var opponentName = opponentStep.dataset.opponentName;
+    var opponentCurrent = Number(opponentLevels[opponentName]) || 0;
+    var opponentNext = Math.max(1, Math.min(100, opponentCurrent + Number(opponentStep.dataset.step)));
+    opponentLevels[opponentName] = opponentNext;
+    if (selections.search) renderPokemon(selections.search);
+    return;
+  }
+  var teamStep = event.target.closest(".team-level-step[data-team-index]");
+  if (teamStep) {
+    var stepMember = team[Number(teamStep.dataset.teamIndex)];
+    if (!stepMember) return;
+    var teamCurrent = Number(stepMember.level) || 0;
+    stepMember.level = Math.max(1, Math.min(100, teamCurrent + Number(teamStep.dataset.step)));
+    cleanTeamMoves(stepMember);
+    saveTeam();
+    renderTeam();
+    renderTeamEditor();
+    return;
+  }
   var addButton = event.target.closest(".add-team-button[data-team-index]");
   if (!addButton || addButton.disabled) return;
   var member = pokemon[Number(addButton.dataset.teamIndex)];
   if (team.length >= 6 || teamContains(member)) return;
   team.push({
     name: member.name,
+    nickname: "",
     level: "",
     moves: [],
     fainted: false
@@ -1656,6 +1761,17 @@ document.querySelector(".app").addEventListener("change", function (event) {
     renderTeam();
     if (activeMode === "team") renderTeamEditor();
   }
+});
+document.querySelector(".app").addEventListener("input", function (event) {
+  var nicknameInput = event.target.closest(".team-nickname[data-team-index]");
+  if (!nicknameInput) return;
+  var nicknameMember = team[Number(nicknameInput.dataset.teamIndex)];
+  if (!nicknameMember) return;
+  nicknameMember.nickname = nicknameInput.value.replace(/^\s+|\s+$/g, "");
+  saveTeam();
+  renderTeam();
+  if (selections.search) renderRecommendation(selections.search);
+  resultTitle.textContent = teamDisplayName(nicknameMember);
 });
 pokemonSearch.addEventListener("input", function (event) {
   searchPage = 1;
